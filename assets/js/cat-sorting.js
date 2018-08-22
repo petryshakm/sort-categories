@@ -1,13 +1,13 @@
 jQuery(document).ready(function($) {
 
 
-// load categories on widget form submit
+//---------------------------------------------------load categories on widget form submit
 $('#sortCategories').submit(function(event) {
     event.preventDefault();
     get_subcategories();
 });
 
-// widget reset button handler
+//---------------------------------------------------widget reset button handler
 $('#sortCategories .reset-catfilter').click(function(event) {
     var load_defauld_categories = function(){
        get_subcategories();
@@ -76,8 +76,6 @@ function get_subcategories(){
 // theme corrections
 $('.category-38 .content-area .article-card:eq( 1 )').removeClass('double');
 $('.category-38 .content-area .article-card').last().addClass('double');
-
-
 
 
 }) //document Ready;

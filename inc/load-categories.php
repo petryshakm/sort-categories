@@ -1,6 +1,8 @@
 <?php 
 function load_subcategories() {
-
+	/*
+		ajax function handler
+	*/
 
 	$query_data = $_GET;
 
