@@ -32,15 +32,14 @@ class Sort_Categories_Widget extends WP_Widget {
 					echo '<input type = "text" class = "cat-search-field" name = "search_cat" placeholder = "Search for...">';
 				}
 
-
-
 				
 				//--------------------------------------output categories select 1
 				if ( $instance['sort_select_1'] ) {
 
 					$sort_select_1_categories_IDs = explode(',', $instance['sort_select_1']);
+					$sort_select_1_categories_IDs = sort_included_categories($sort_select_1_categories_IDs);
 
-					sort_output_included_categories($sort_select_1_categories_IDs, '1', 'Regions');
+					output_categories_select($sort_select_1_categories_IDs, '1', 'Regions');
 					
 				}
 
@@ -48,8 +47,9 @@ class Sort_Categories_Widget extends WP_Widget {
 				if ( $instance['sort_select_2'] ) {
 
 					$sort_select_2_categories_IDs = explode(',', $instance['sort_select_2']);
-
-					sort_output_included_categories($sort_select_2_categories_IDs, '2', 'Expertise' );
+					$sort_select_2_categories_IDs = sort_included_categories($sort_select_2_categories_IDs);
+					
+					output_categories_select($sort_select_2_categories_IDs, '2', 'Expertise');
 
 				}
 
@@ -57,13 +57,12 @@ class Sort_Categories_Widget extends WP_Widget {
 				//--------------------------------------output categories select 3
 				if ( $instance['sort_select_3'] ) {
 
-					$sort_select_3_categories_IDs = explode(',', $instance['sort_select_3']);
-
-					sort_output_included_categories($sort_select_3_categories_IDs, '3', '3rd' );
+					$sort_select_3_categories_IDs = explode(',', $instance['sort_select_2']);
+					$sort_select_3_categories_IDs = sort_included_categories($sort_select_3_categories_IDs);
 					
+					output_categories_select($sort_select_3_categories_IDs, '3', 'Other criteria');
+
 				}
-
-
 
 
 				echo '<div class = "submit-wrapper">
@@ -143,7 +142,7 @@ class Sort_Categories_Widget extends WP_Widget {
 		</style>
 
 
-		<?php 
+<?php 
 	}
 
 	
@@ -179,34 +178,52 @@ add_action( 'widgets_init', 'register_sort_categories_widget' );
 
 
 
-function sort_output_included_categories($category_order_ids, $select_number, $first_select_text){
-		/*
-			- Sort get_categories output by widget input field order 
-			- Output select field items html
+function sort_included_categories($categories_to_order){
+	/*
+		- Sort get_categories output by widget input field value string
 
-			$category_order_ids - array of categories ids (array)
-			$select_number - sequence number of <select> tag (for name and class attributes) (string)
-			$first_select_text - first select text value (string)
-		*/
+		$categories_to_order - array of categories ids (array)
+		
+	*/
 
-		$category_order = $category_order_ids;
-		$category_array = array();
+	$category_order = $categories_to_order;
+	$category_array = array();
 
-		$categories = get_categories(array('include'=>$category_order_ids,  'hide_empty' => false));
+	$categories = get_categories(array('include'=>$categories_to_order,  'hide_empty' => false));
 
-		if ($categories) {
-			foreach($categories as $cat) {
-				$category_array[array_search($cat->cat_ID,$category_order)] = '<option class = "category-'.$cat->term_id.'" value="'.$cat->term_id.'">'.$cat->name.'</option>';
-			}
-
-			ksort($category_array);
-
-			echo '<select class = "sort-select-'.$select_number.'" name="sort_select_'.$select_number.'">';
-			echo '<option class = "empty" value="none">'.$first_select_text.'</option>';
-				foreach($category_array as $category){
-					echo $category;  	
-				}
-			echo '</select>';
+	if ($categories) {
+		foreach($categories as $cat) {
+			$category_array[array_search($cat->cat_ID,$category_order)] = '<option class = "category-'.$cat->term_id.'" value="'.$cat->term_id.'">'.$cat->name.'</option>';
 		}
+
+		ksort($category_array);
+
+		return $category_array;
 	}
+}
+
+
+
+
+function output_categories_select($categories_to_output, $select_number, $first_select_text){
+	/*
+		- Output select field items html
+
+		$select_number - sequence number of <select> tag (for name and class attributes) (string)
+		$first_select_text - first select text value (string)
+
+	*/
+
+	echo '<select class = "sort-select-'.$select_number.'" name="sort_select_'.$select_number.'">';
+		echo '<option class = "empty" value="none">'.$first_select_text.'</option>';
+			foreach($categories_to_output as $category){
+				echo $category;  	
+			}
+	echo '</select>';
+}
+
+
+
+
+
 ?>

@@ -7,7 +7,7 @@ $('#sortCategories').submit(function(event) {
     get_subcategories();
 });
 
-// widget reset button 
+// widget reset button handler
 $('#sortCategories .reset-catfilter').click(function(event) {
     var load_defauld_categories = function(){
        get_subcategories();
@@ -18,6 +18,10 @@ $('#sortCategories .reset-catfilter').click(function(event) {
 
 
 function getSelectedCategories(select_number){
+    /*
+        get selected category value from <select> field
+    */
+
     var parent_category =  $(".sort-categories-form .sort-select-" + select_number + " option:selected").val();
     if (parent_category) {
         return parent_category; 
@@ -27,6 +31,9 @@ function getSelectedCategories(select_number){
 }
 
 function getSearchFieldValue(){
+    /*
+        get keyword search field value
+    */
     var search_value =  $(".sort-categories-form .cat-search-field").val();
     return search_value; 
 }
